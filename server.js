@@ -6,17 +6,13 @@ const app = express();
 app.use(express.json());
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const BITRIX_DOMAIN = process.env.BITRIX_DOMAIN;
-const BITRIX_API_KEY = process.env.BITRIX_API_KEY;
+const BITRIX_WEBHOOK_URL = process.env.BITRIX_WEBHOOK_URL;
 const PORT = process.env.PORT || 3000;
 
-// Bitrix API helper
+// Bitrix Webhook API helper
 const bitrixAPI = (method, params = {}) => {
-  const url = `https://${BITRIX_DOMAIN}/rest/${method}.json`;
-  return axios.post(url, {
-    ...params,
-    auth: BITRIX_API_KEY
-  });
+  const url = `${BITRIX_WEBHOOK_URL}${method}.json`;
+  return axios.post(url, params);
 };
 
 // Telegram webhook handler
@@ -166,6 +162,6 @@ app.get('/health', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📝 Webhook: https://your-domain.com/webhook/telegram`);
-  console.log(`⚙️  Setup: https://your-domain.com/setup-webhook`);
+  console.log(`📝 Webhook: ${process.env.TELEGRAM_WEBHOOK_URL}`);
+  console.log(`⚙️  Setup: ${process.env.TELEGRAM_WEBHOOK_URL || 'https://your-app.railway.app'}/setup-webhook`);
 });
